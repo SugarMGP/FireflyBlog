@@ -304,7 +304,8 @@ const relatedPosts = await getRelatedPosts(entry, 5);
                             client:load
                             title={entry.data.title}
                             author={profileConfig.name}
-                            description={entry.data.description || entry.data.title}
+                            category={entry.data.category}
+                            wordCount={remarkPluginFrontmatter.words}
                             pubDate={formatDateToYYYYMMDD(entry.data.published)}
                             coverImage={posterCoverUrl}
                             url={Astro.url.href}
@@ -392,7 +393,8 @@ const relatedPosts = await getRelatedPosts(entry, 5);
                             client:load
                             title={entry.data.title}
                             author={profileConfig.name}
-                            description={entry.data.description || entry.data.title}
+                            category={entry.data.category}
+                            wordCount={remarkPluginFrontmatter.words}
                             pubDate={formatDateToYYYYMMDD(entry.data.published)}
                             coverImage={posterCoverUrl}
                             url={Astro.url.href}

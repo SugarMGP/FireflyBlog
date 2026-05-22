@@ -7,7 +7,8 @@ import { i18n } from "../../i18n/translation";
 
 export let title: string;
 export let author: string;
-export let description = "";
+export let category: string | null = null;
+export let wordCount: number | null = null;
 export let pubDate: string;
 export let coverImage: string | null = null;
 export let url: string;
@@ -60,15 +61,16 @@ function getLines(
 	ctx: CanvasRenderingContext2D,
 	text: string,
 	maxWidth: number,
+	maxLines = Number.POSITIVE_INFINITY,
 ): string[] {
-	const chars = text.split("");
+	const chars = normalizeText(text).split("");
 	const lines: string[] = [];
 	let currentLine = "";
 
 	for (let i = 0; i < chars.length; i++) {
 		const char = chars[i];
 		const width = ctx.measureText(currentLine + char).width;
-		if (width < maxWidth) {
+		if (width <= maxWidth || currentLine === "") {
 			currentLine += char;
 		} else {
 			lines.push(currentLine);
@@ -78,7 +80,66 @@ function getLines(
 	if (currentLine) {
 		lines.push(currentLine);
 	}
-	return lines;
+	if (lines.length <= maxLines) return lines;
+
+	const clampedLines = lines.slice(0, maxLines);
+	const lastIndex = clampedLines.length - 1;
+	clampedLines[lastIndex] = ellipsizeText(
+		ctx,
+		clampedLines[lastIndex],
+		maxWidth,
+	);
+	return clampedLines;
+}
+
+function normalizeText(text: string): string {
+	return text.trim().replace(/\s+/g, " ");
+}
+
+function ellipsizeText(
+	ctx: CanvasRenderingContext2D,
+	text: string,
+	maxWidth: number,
+): string {
+	if (ctx.measureText(text).width <= maxWidth) return text;
+
+	let output = text;
+	while (
+		output.length > 0 &&
+		ctx.measureText(`${output}...`).width > maxWidth
+	) {
+		output = output.slice(0, -1);
+	}
+	return output ? `${output}...` : "";
+}
+
+function drawTextLine(
+	ctx: CanvasRenderingContext2D,
+	text: string,
+	x: number,
+	y: number,
+	maxWidth: number,
+) {
+	const output = ellipsizeText(ctx, text, maxWidth);
+	if (output) {
+		ctx.fillText(output, x, y);
+	}
+}
+
+function drawRightTextLine(
+	ctx: CanvasRenderingContext2D,
+	text: string,
+	rightX: number,
+	y: number,
+	maxWidth: number,
+) {
+	const output = ellipsizeText(ctx, text, maxWidth);
+	if (!output) return;
+
+	ctx.save();
+	ctx.textAlign = "right";
+	ctx.fillText(output, rightX, y);
+	ctx.restore();
 }
 
 function drawRoundedRect(
@@ -102,6 +163,76 @@ function drawRoundedRect(
 	ctx.closePath();
 }
 
+function fillRoundedRect(
+	ctx: CanvasRenderingContext2D,
+	x: number,
+	y: number,
+	width: number,
+	height: number,
+	radius: number,
+) {
+	drawRoundedRect(ctx, x, y, width, height, radius);
+	ctx.fill();
+}
+
+function parsePosterDate(): {
+	day: string;
+	month: string;
+	year: string;
+} | null {
+	try {
+		const d = new Date(pubDate);
+		if (Number.isNaN(d.getTime())) return null;
+		return {
+			day: d.getDate().toString().padStart(2, "0"),
+			month: (d.getMonth() + 1).toString().padStart(2, "0"),
+			year: d.getFullYear().toString(),
+		};
+	} catch {
+		return null;
+	}
+}
+
+function formatWordCount(): string {
+	if (typeof wordCount !== "number" || !Number.isFinite(wordCount)) return "";
+	return `${Math.max(0, Math.round(wordCount))} ${i18n(I18nKey.wordsCount)}`;
+}
+
+function drawCoverImage(
+	ctx: CanvasRenderingContext2D,
+	image: HTMLImageElement,
+	x: number,
+	y: number,
+	width: number,
+	height: number,
+	radius: number,
+) {
+	const imageRatio = image.width / image.height;
+	const targetRatio = width / height;
+	let sx: number;
+	let sy: number;
+	let sourceWidth: number;
+	let sourceHeight: number;
+
+	if (imageRatio > targetRatio) {
+		sourceHeight = image.height;
+		sourceWidth = sourceHeight * targetRatio;
+		sx = (image.width - sourceWidth) / 2;
+		sy = 0;
+	} else {
+		sourceWidth = image.width;
+		sourceHeight = sourceWidth / targetRatio;
+		sx = 0;
+		sy = (image.height - sourceHeight) / 2;
+	}
+
+	ctx.save();
+	drawRoundedRect(ctx, x, y, width, height, radius);
+	ctx.clip();
+	ctx.drawImage(image, sx, sy, sourceWidth, sourceHeight, x, y, width, height);
+	ctx.restore();
+}
+
 async function generatePoster() {
 	showModal = true;
 	if (posterImage) return;
@@ -110,9 +241,8 @@ async function generatePoster() {
 	try {
 		const scale = 2;
 		const width = 425 * scale;
-		const padding = 24 * scale;
+		const padding = 26 * scale;
 
-		// 1. Prepare resources
 		const qrCodeUrl = await QRCode.toDataURL(url, {
 			margin: 1,
 			width: 100 * scale,
@@ -124,243 +254,178 @@ async function generatePoster() {
 			avatar ? loadImage(avatar) : Promise.resolve(null),
 		]);
 
-		// 2. Setup Canvas for measuring
 		const canvas = document.createElement("canvas");
 		const ctx = canvas.getContext("2d");
 		if (!ctx) throw new Error("Canvas context not available");
 
 		canvas.width = width;
-		// Initial height estimation, will be adjusted
 		canvas.height = 1000 * scale;
 
-		// 3. Layout Calculation
 		const contentWidth = width - padding * 2;
-		let currentY = 0;
+		const coverX = padding;
+		const coverY = padding;
+		const coverWidth = contentWidth;
+		const coverHeight = (coverImg ? 206 : 150) * scale;
+		const coverRadius = 16 * scale;
+		const titleX = padding + 14 * scale;
+		const titleWidth = contentWidth - 14 * scale;
+		const dateObj = parsePosterDate();
+		const metaText = [normalizeText(category || ""), formatWordCount()]
+			.filter(Boolean)
+			.join(" / ");
 
-		// Cover
-		const coverHeight = (coverImage ? 200 : 120) * scale;
-		currentY += coverHeight;
-		currentY += padding; // Gap after cover
-
-		// Meta (Date on Cover) - No extra height needed
-
-		// Title
 		ctx.font = `700 ${24 * scale}px 'Roboto', sans-serif`;
-		const titleLines = getLines(ctx, title, contentWidth);
-		const titleLineHeight = 30 * scale;
+		const titleLines = getLines(ctx, title, titleWidth, 3);
+		const titleLineHeight = 31 * scale;
 		const titleHeight = titleLines.length * titleLineHeight;
-		currentY += titleHeight;
-		currentY += 16 * scale; // Gap
 
-		// Description
-		let descHeight = 0;
-		if (description) {
-			ctx.font = `${14 * scale}px 'Roboto', sans-serif`;
-			const descLines = getLines(ctx, description, contentWidth - 16 * scale); // minus border width and gap
-			// Limit to 6 lines
-			const maxDescLines = 6;
-			const displayDescLines = descLines.slice(0, maxDescLines);
-			const descLineHeight = 25 * scale; // 1.8 line-height approx
-			descHeight = displayDescLines.length * descLineHeight;
-			currentY += descHeight;
-			// currentY += 24 * scale; // Gap to footer (Removed to reduce whitespace)
-		} else {
-			currentY += 8 * scale; // Smaller gap if no desc
-		}
+		const metaGap = metaText ? 14 * scale : 8 * scale;
+		const metaHeight = metaText ? 20 * scale : 0;
 
-		// Footer (Author + QR)
-		// Footer top border + padding
-		currentY += 24 * scale;
-		const footerHeight = 64 * scale; // Avatar/QR height
-		currentY += footerHeight;
-		currentY += padding; // Bottom padding
+		const contentStartY = coverY + coverHeight + 24 * scale;
+		const afterTitleY = contentStartY + titleHeight;
+		const afterMetaY = afterTitleY + metaGap + metaHeight;
+		const dividerY = afterMetaY + 24 * scale;
+		const footerY = dividerY + 18 * scale;
+		const footerHeight = 82 * scale;
 
-		// 4. Resize Canvas to fit content
-		canvas.height = currentY;
+		canvas.height = footerY + footerHeight + padding;
 
-		// 5. Draw Content
-		// Fill Background
 		ctx.fillStyle = "#ffffff";
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-		// Draw Decorative Circles
-		ctx.save();
-		ctx.globalAlpha = 0.1;
-		ctx.fillStyle = themeColor;
-
-		// Top Right Circle
-		// CSS: top: -50px, right: -50px, width: 150px, height: 150px
-		// Radius = 75px
-		// Center X = width + 50 - 75 = width - 25
-		// Center Y = -50 + 75 = 25
-		ctx.beginPath();
-		ctx.arc(width - 25 * scale, 25 * scale, 75 * scale, 0, Math.PI * 2);
-		ctx.fill();
-
-		// Bottom Left Circle
-		// Adjusted to cover the avatar
-		ctx.beginPath();
-		ctx.arc(10 * scale, canvas.height - 10 * scale, 50 * scale, 0, Math.PI * 2);
-		ctx.fill();
-		ctx.restore();
-
-		// Parse Date
-		let dateObj: { day: string; month: string; year: string } | null = null;
-		try {
-			const d = new Date(pubDate);
-			if (!Number.isNaN(d.getTime())) {
-				dateObj = {
-					day: d.getDate().toString().padStart(2, "0"),
-					month: (d.getMonth() + 1).toString().padStart(2, "0"),
-					year: d.getFullYear().toString(),
-				};
-			}
-		} catch (e) {}
-
-		// Draw Cover
 		if (coverImg) {
-			// Object-fit: cover implementation
-			const imgRatio = coverImg.width / coverImg.height;
-			const targetRatio = width / coverHeight;
-			let sx: number;
-			let sy: number;
-			let sWidth: number;
-			let sHeight: number;
-
-			if (imgRatio > targetRatio) {
-				sHeight = coverImg.height;
-				sWidth = sHeight * targetRatio;
-				sx = (coverImg.width - sWidth) / 2;
-				sy = 0;
-			} else {
-				sWidth = coverImg.width;
-				sHeight = sWidth / targetRatio;
-				sx = 0;
-				sy = (coverImg.height - sHeight) / 2;
-			}
-			ctx.drawImage(
-				coverImg,
-				sx,
-				sy,
-				sWidth,
-				sHeight,
-				0,
-				0,
-				width,
+			ctx.save();
+			ctx.shadowColor = "rgba(15, 23, 42, 0.16)";
+			ctx.shadowBlur = 16 * scale;
+			ctx.shadowOffsetY = 8 * scale;
+			ctx.fillStyle = "#ffffff";
+			fillRoundedRect(
+				ctx,
+				coverX,
+				coverY,
+				coverWidth,
 				coverHeight,
+				coverRadius,
+			);
+			ctx.restore();
+			drawCoverImage(
+				ctx,
+				coverImg,
+				coverX,
+				coverY,
+				coverWidth,
+				coverHeight,
+				coverRadius,
 			);
 		} else {
 			ctx.save();
+			const gradient = ctx.createLinearGradient(
+				coverX,
+				coverY,
+				coverX + coverWidth,
+				coverY + coverHeight,
+			);
+			gradient.addColorStop(0, "#f8fafc");
+			gradient.addColorStop(1, "#eef2f7");
+			ctx.fillStyle = gradient;
+			fillRoundedRect(
+				ctx,
+				coverX,
+				coverY,
+				coverWidth,
+				coverHeight,
+				coverRadius,
+			);
+			ctx.globalAlpha = 0.18;
 			ctx.fillStyle = themeColor;
-			ctx.globalAlpha = 0.2;
-			ctx.fillRect(0, 0, width, coverHeight);
+			fillRoundedRect(
+				ctx,
+				coverX,
+				coverY,
+				coverWidth,
+				coverHeight,
+				coverRadius,
+			);
 			ctx.restore();
 		}
 
-		// Draw Date Overlay
 		if (dateObj) {
-			const dateBoxW = 60 * scale;
-			const dateBoxH = 60 * scale;
-			const dateBoxX = padding;
-			const dateBoxY = coverHeight - dateBoxH;
+			const dateBoxW = 64 * scale;
+			const dateBoxH = 56 * scale;
+			const dateBoxX = coverX + 14 * scale;
+			const dateBoxY = coverY + coverHeight - dateBoxH - 14 * scale;
 
-			// Background (Semi-transparent black)
-			ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
-			drawRoundedRect(ctx, dateBoxX, dateBoxY, dateBoxW, dateBoxH, 4 * scale);
-			ctx.fill();
+			ctx.fillStyle = "rgba(17, 24, 39, 0.48)";
+			fillRoundedRect(ctx, dateBoxX, dateBoxY, dateBoxW, dateBoxH, 12 * scale);
 
-			// Day
 			ctx.fillStyle = "#ffffff";
 			ctx.textAlign = "center";
-			ctx.textBaseline = "middle";
-			ctx.font = `700 ${30 * scale}px 'Roboto', sans-serif`;
-			ctx.fillText(dateObj.day, dateBoxX + dateBoxW / 2, dateBoxY + 24 * scale);
+			ctx.textBaseline = "top";
+			ctx.font = `700 ${28 * scale}px 'Roboto', sans-serif`;
+			ctx.fillText(dateObj.day, dateBoxX + dateBoxW / 2, dateBoxY + 6 * scale);
 
-			// Line
-			ctx.beginPath();
-			ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
-			ctx.lineWidth = 1 * scale;
-			ctx.moveTo(dateBoxX + 10 * scale, dateBoxY + 42 * scale);
-			ctx.lineTo(dateBoxX + dateBoxW - 10 * scale, dateBoxY + 42 * scale);
-			ctx.stroke();
-
-			// Year Month
-			ctx.font = `${10 * scale}px 'Roboto', sans-serif`;
+			ctx.font = `${11 * scale}px 'Roboto', sans-serif`;
 			ctx.fillText(
-				`${dateObj.year} ${dateObj.month}`,
+				`${dateObj.year}.${dateObj.month}`,
 				dateBoxX + dateBoxW / 2,
-				dateBoxY + 51 * scale,
+				dateBoxY + 38 * scale,
 			);
 		}
 
-		// Reset Y for drawing
-		let drawY = coverHeight + padding;
+		let drawY = contentStartY;
 
-		// Draw Title
 		ctx.textBaseline = "top";
 		ctx.textAlign = "left";
+		ctx.save();
+		ctx.fillStyle = themeColor;
+		fillRoundedRect(
+			ctx,
+			padding,
+			drawY + 4 * scale,
+			4 * scale,
+			Math.max(20 * scale, Math.min(titleHeight - 8 * scale, 58 * scale)),
+			2 * scale,
+		);
+		ctx.restore();
+
 		ctx.font = `700 ${24 * scale}px 'Roboto', sans-serif`;
 		ctx.fillStyle = "#111827";
 		titleLines.forEach((line) => {
-			ctx.fillText(line, padding, drawY);
+			ctx.fillText(line, titleX, drawY);
 			drawY += titleLineHeight;
 		});
-		drawY += 16 * scale - (titleLineHeight - 24 * scale); // Adjust for line-height diff
 
-		// Draw Description
-		if (description) {
-			// Draw vertical line
-			ctx.fillStyle = "#e5e7eb";
-			const descLineH = descHeight; // Approximate
-			// Extend the line slightly above and below the text
-			drawRoundedRect(
-				ctx,
-				padding,
-				drawY - 8 * scale,
-				4 * scale,
-				descLineH + 8 * scale,
-				2 * scale,
-			);
-			ctx.fill();
-
-			ctx.font = `${14 * scale}px 'Roboto', sans-serif`;
-			ctx.fillStyle = "#4b5563";
-			const descLines = getLines(ctx, description, contentWidth - 16 * scale);
-			const maxDescLines = 6;
-
-			descLines.slice(0, maxDescLines).forEach((line) => {
-				ctx.fillText(line, padding + 16 * scale, drawY);
-				drawY += 25 * scale; // line height
-			});
-			// drawY += 24 * scale; // Removed to reduce whitespace
-		} else {
-			drawY += 8 * scale;
+		if (metaText) {
+			drawY += metaGap;
+			ctx.font = `500 ${13 * scale}px 'Roboto', sans-serif`;
+			ctx.fillStyle = "#667085";
+			drawTextLine(ctx, metaText, titleX, drawY, titleWidth);
 		}
 
-		// Draw Footer Divider
-		drawY += 24 * scale; // Spacing before line
 		ctx.beginPath();
-		ctx.strokeStyle = "#f3f4f6";
+		ctx.strokeStyle = "#edf0f5";
 		ctx.lineWidth = 1 * scale;
-		ctx.moveTo(padding, drawY);
-		ctx.lineTo(width - padding, drawY);
+		ctx.moveTo(padding, dividerY);
+		ctx.lineTo(width - padding, dividerY);
 		ctx.stroke();
-		drawY += 24 * scale; // Spacing after line
 
-		// Draw Footer Content
-		const footerY = drawY;
+		const qrSize = 62 * scale;
+		const qrX = width - padding - qrSize;
+		const qrY = footerY + (footerHeight - qrSize) / 2;
+		const avatarSize = 52 * scale;
+		const avatarX = padding;
+		const avatarY = footerY + (footerHeight - avatarSize) / 2;
+		const textGroupHeight = 40 * scale;
+		const textGroupY = footerY + (footerHeight - textGroupHeight) / 2;
 
-		// Left: Author
 		if (avatarImg) {
 			ctx.save();
-			const avatarSize = 64 * scale;
-			const avatarX = padding;
 
-			// Circle clip
 			ctx.beginPath();
 			ctx.arc(
 				avatarX + avatarSize / 2,
-				footerY + avatarSize / 2,
+				avatarY + avatarSize / 2,
 				avatarSize / 2,
 				0,
 				Math.PI * 2,
@@ -368,74 +433,89 @@ async function generatePoster() {
 			ctx.closePath();
 			ctx.clip();
 
-			ctx.drawImage(avatarImg, avatarX, footerY, avatarSize, avatarSize);
+			ctx.drawImage(avatarImg, avatarX, avatarY, avatarSize, avatarSize);
 			ctx.restore();
 
-			// Border for avatar
 			ctx.beginPath();
 			ctx.arc(
-				avatarX + (64 * scale) / 2,
-				footerY + (64 * scale) / 2,
-				(64 * scale) / 2,
+				avatarX + avatarSize / 2,
+				avatarY + avatarSize / 2,
+				avatarSize / 2,
 				0,
 				Math.PI * 2,
 			);
-			ctx.strokeStyle = "#ffffff";
+			ctx.strokeStyle = "#f8fafc";
 			ctx.lineWidth = 2 * scale;
 			ctx.stroke();
 		}
 
-		const authorTextX = padding + (avatar ? 64 * scale + 16 * scale : 0);
-		const textCenterY = footerY + 32 * scale;
+		const authorTextX = padding + (avatarImg ? 52 * scale + 14 * scale : 0);
+		const footerSiteTitle = normalizeText(siteTitle);
+		const siteInfoRightX = qrX - 14 * scale;
+		const siteTextWidth = 106 * scale;
+		const siteInfoLeftX = siteInfoRightX - siteTextWidth;
+		const footerTextWidth = siteInfoLeftX - 18 * scale - authorTextX;
+		const labelY = textGroupY;
+		const authorY = textGroupY + 22 * scale;
+
+		ctx.textAlign = "left";
+		ctx.fillStyle = "#9ca3af";
+		ctx.font = `${12 * scale}px 'Roboto', sans-serif`;
+		drawTextLine(
+			ctx,
+			i18n(I18nKey.author),
+			authorTextX,
+			labelY,
+			footerTextWidth,
+		);
+
+		ctx.fillStyle = "#1f2937";
+		ctx.font = `700 ${18 * scale}px 'Roboto', sans-serif`;
+		drawTextLine(ctx, author, authorTextX, authorY, footerTextWidth);
 
 		ctx.fillStyle = "#9ca3af";
 		ctx.font = `${12 * scale}px 'Roboto', sans-serif`;
-		ctx.fillText(i18n(I18nKey.author), authorTextX, textCenterY - 20 * scale);
+		drawRightTextLine(
+			ctx,
+			i18n(I18nKey.scanToRead),
+			siteInfoRightX,
+			textGroupY,
+			siteTextWidth,
+		);
 
 		ctx.fillStyle = "#1f2937";
-		ctx.font = `700 ${20 * scale}px 'Roboto', sans-serif`;
-		ctx.fillText(author, authorTextX, textCenterY + 4 * scale);
+		ctx.font = `700 ${16 * scale}px 'Roboto', sans-serif`;
+		drawRightTextLine(
+			ctx,
+			footerSiteTitle || siteTitle,
+			siteInfoRightX,
+			textGroupY + 22 * scale,
+			siteTextWidth,
+		);
 
-		// Right: QR Code
-		const qrSize = 64 * scale;
-		const qrX = width - padding - qrSize;
-
-		// QR Background/Shadow effect (simplified as border)
 		ctx.fillStyle = "#ffffff";
-		// Shadow simulation
-		ctx.shadowColor = "rgba(0, 0, 0, 0.05)";
-		ctx.shadowBlur = 4 * scale;
+		ctx.shadowColor = "rgba(15, 23, 42, 0.08)";
+		ctx.shadowBlur = 8 * scale;
 		ctx.shadowOffsetY = 2 * scale;
-		drawRoundedRect(ctx, qrX, footerY, qrSize, qrSize, 4 * scale);
-		ctx.fill();
-		ctx.shadowColor = "transparent"; // Reset shadow
+		fillRoundedRect(ctx, qrX, qrY, qrSize, qrSize, 10 * scale);
+		ctx.shadowColor = "transparent";
+		ctx.strokeStyle = "#edf0f5";
+		ctx.lineWidth = 1 * scale;
+		drawRoundedRect(ctx, qrX, qrY, qrSize, qrSize, 10 * scale);
+		ctx.stroke();
 
-		// Draw QR
-		const qrInnerSize = 56 * scale;
+		const qrInnerSize = 54 * scale;
 		const qrPadding = (qrSize - qrInnerSize) / 2;
 		if (qrImg) {
 			ctx.drawImage(
 				qrImg,
 				qrX + qrPadding,
-				footerY + qrPadding,
+				qrY + qrPadding,
 				qrInnerSize,
 				qrInnerSize,
 			);
 		}
 
-		// Site Info (Left of QR)
-		const siteInfoX = qrX - 16 * scale;
-		ctx.textAlign = "right";
-
-		ctx.fillStyle = "#9ca3af";
-		ctx.font = `${12 * scale}px 'Roboto', sans-serif`;
-		ctx.fillText(i18n(I18nKey.scanToRead), siteInfoX, textCenterY - 20 * scale);
-
-		ctx.fillStyle = "#1f2937";
-		ctx.font = `700 ${20 * scale}px 'Roboto', sans-serif`;
-		ctx.fillText(siteTitle, siteInfoX, textCenterY + 4 * scale);
-
-		// Finalize
 		posterImage = canvas.toDataURL("image/png");
 		generating = false;
 	} catch (error) {
@@ -494,23 +574,23 @@ function portal(node: HTMLElement) {
 {#if showModal}
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <div use:portal class="fixed inset-0 z-9999 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 transition-opacity" on:click={closeModal}>
-    <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-[440px] w-full max-h-[90vh] overflow-y-auto flex flex-col shadow-2xl transform transition-all" on:click={(e) => e.stopPropagation()}>
+  <div use:portal class="fixed inset-0 z-9999 flex items-center justify-center bg-black/55 backdrop-blur-xs p-4 transition-opacity" on:click={closeModal}>
+    <div class="bg-(--card-bg) rounded-(--radius-large) max-w-[440px] w-full max-h-[90vh] overflow-y-auto flex flex-col shadow-2xl transform transition-all border border-(--line-divider)" on:click={(e) => e.stopPropagation()}>
       
-      <div class="p-6 flex justify-center bg-gray-50 dark:bg-gray-900 min-h-[200px] items-center">
+      <div class="p-5 sm:p-6 flex justify-center bg-(--btn-plain-bg-hover) min-h-[200px] items-center">
         {#if posterImage}
-          <img src={posterImage} alt="Poster" class="max-w-full h-auto shadow-lg rounded-lg" />
+          <img src={posterImage} alt="Poster" class="max-w-full h-auto shadow-xl rounded-xl" />
         {:else}
            <div class="flex flex-col items-center gap-3">
-             <div class="w-8 h-8 border-2 border-gray-200 rounded-full animate-spin" style="border-top-color: {themeColor}"></div>
-             <span class="text-sm text-gray-500">{i18n(I18nKey.generatingPoster)}</span>
+             <div class="w-8 h-8 border-2 border-black/10 dark:border-white/10 rounded-full animate-spin" style="border-top-color: {themeColor}"></div>
+             <span class="text-sm text-50">{i18n(I18nKey.generatingPoster)}</span>
            </div>
         {/if}
       </div>
       
-      <div class="p-4 border-t border-gray-100 dark:border-gray-700 grid grid-cols-2 gap-3">
+      <div class="p-4 border-t border-(--line-divider) grid grid-cols-2 gap-3">
         <button 
-          class="py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl font-medium hover:bg-gray-200 dark:hover:bg-gray-600 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+          class="btn-regular h-12 rounded-lg font-medium active:scale-[0.98] transition-all flex items-center justify-center gap-2"
           on:click={copyLink}
         >
           {#if copied}
@@ -522,7 +602,7 @@ function portal(node: HTMLElement) {
           {/if}
         </button>
         <button 
-          class="py-3 text-white rounded-xl font-medium active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-90"
+          class="h-12 text-white dark:text-black/70 rounded-lg font-medium active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-95"
           style="background-color: {themeColor};"
           on:click={downloadPoster}
           disabled={!posterImage}
