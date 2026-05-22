@@ -19,12 +19,7 @@ export const siteConfig: SiteConfig = {
 	description: "白糖洒一地的个人博客",
 
 	// 站点关键词
-	keywords: [
-		"博客",
-		"技术博客",
-		"后端开发",
-		"技术讨论"
-	],
+	keywords: ["博客", "技术博客", "后端开发", "技术讨论"],
 
 	// 主题色
 	themeColor: {
