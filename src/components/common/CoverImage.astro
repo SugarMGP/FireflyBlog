@@ -95,7 +95,9 @@ if (fallbackPath && !isLocal && !isFallbackPublic) {
 }
 
 // 图片样式
-const imageClass = "w-full h-full object-cover";
+const imageClass = preview
+	? "w-full h-full object-cover"
+	: "w-full h-auto object-contain";
 const imageStyle = `object-position: ${position};`;
 
 // 响应式配置
@@ -119,6 +121,13 @@ const remoteReferrerPolicy =
 	!isLocal && shouldAddNoReferrer(isPublic ? url(src) : src)
 		? "no-referrer"
 		: undefined;
+
+const getPictureSizeProps = (image: ImageMetadata) => ({
+	width: preview ? 400 : image.width,
+	height: preview ? 300 : image.height,
+	widths: preview ? widths : [image.width],
+	sizes: preview ? sizes : `${image.width}px`,
+});
 ---
 
 <div
@@ -147,15 +156,12 @@ const remoteReferrerPolicy =
 				alt="Fallback cover"
 				class={imageClass}
 				style={imageStyle}
-				width={preview ? 400 : 1200}
-				height={preview ? 300 : 800}
 				loading="lazy"
 				formats={formats}
 				fallbackFormat={fallbackFormat}
 				quality={quality}
-				widths={widths}
-				sizes={sizes}
 				layout={layout}
+				{...getPictureSizeProps(fallbackImg)}
 			/>
 		</div>
 	)}
@@ -180,15 +186,12 @@ const remoteReferrerPolicy =
 			alt={alt || ""}
 			class={imageClass}
 			style={imageStyle}
-			width={preview ? 400 : 1200}
-			height={preview ? 300 : 800}
 			loading={loading}
 			formats={formats}
 			fallbackFormat={fallbackFormat}
 			quality={quality}
-			widths={widths}
-			sizes={sizes}
 			layout={layout}
+			{...getPictureSizeProps(img)}
 			data-cover-img
 		/>
 	)}

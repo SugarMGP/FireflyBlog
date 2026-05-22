@@ -12,6 +12,7 @@ import {
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getSortedFriendTags } from "@/utils/friends-utils";
 
 // 检查页面是否启用
 if (!siteConfig.pages.friends) {
@@ -34,7 +35,7 @@ const isCommentEnabled =
 
 // 使用配置文件中的友链数据，按权重排序
 const items = getEnabledFriends();
-const allTags = [...new Set(items.flatMap((item) => item.tags || []))].sort();
+const allTags = getSortedFriendTags(items);
 
 // 页面标题和描述
 const title = friendsPageConfig.title || i18n(I18nKey.friends);

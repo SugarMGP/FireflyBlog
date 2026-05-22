@@ -14,7 +14,7 @@ export const plantumlConfig: PlantUMLConfig = {
 	 * 是否启用 PlantUML 渲染能力。
 	 * 关闭时 `plantuml` 代码块退化为普通代码高亮，由 Expressive Code 处理。
 	 */
-	enable: true,
+	enable: false,
 
 	/**
 	 * PlantUML 服务器地址（不含尾部斜杠也可，会自动归一化）。
