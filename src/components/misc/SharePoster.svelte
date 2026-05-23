@@ -113,33 +113,66 @@ function ellipsizeText(
 	return output ? `${output}...` : "";
 }
 
-function drawTextLine(
-	ctx: CanvasRenderingContext2D,
-	text: string,
-	x: number,
-	y: number,
-	maxWidth: number,
-) {
-	const output = ellipsizeText(ctx, text, maxWidth);
-	if (output) {
-		ctx.fillText(output, x, y);
-	}
+type TextStackLine = {
+	text: string;
+	font: string;
+	color: string;
+	maxWidth: number;
+	lineHeight: number;
+};
+
+const TEXT_METRIC_SAMPLE = "Hg国字";
+
+function measureTextStack(lines: TextStackLine[]): number {
+	return lines.reduce((height, line) => height + line.lineHeight, 0);
 }
 
-function drawRightTextLine(
+function getCenteredBaseline(
 	ctx: CanvasRenderingContext2D,
-	text: string,
-	rightX: number,
-	y: number,
-	maxWidth: number,
-) {
-	const output = ellipsizeText(ctx, text, maxWidth);
-	if (!output) return;
+	top: number,
+	lineHeight: number,
+): number {
+	const metrics = ctx.measureText(TEXT_METRIC_SAMPLE);
+	return (
+		top +
+		(lineHeight +
+			metrics.actualBoundingBoxAscent -
+			metrics.actualBoundingBoxDescent) /
+			2
+	);
+}
 
+function drawTextStack(
+	ctx: CanvasRenderingContext2D,
+	lines: TextStackLine[],
+	x: number,
+	top: number,
+	align: CanvasTextAlign = "left",
+): number {
 	ctx.save();
-	ctx.textAlign = "right";
-	ctx.fillText(output, rightX, y);
+	ctx.textBaseline = "alphabetic";
+	ctx.textAlign = align;
+	let currentY = top;
+	lines.forEach((line) => {
+		const label = normalizeText(line.text);
+		if (!label) {
+			currentY += line.lineHeight;
+			return;
+		}
+		ctx.font = line.font;
+		ctx.fillStyle = line.color;
+		const output = ellipsizeText(ctx, label, line.maxWidth);
+		if (output) {
+			ctx.fillText(
+				output,
+				x,
+				getCenteredBaseline(ctx, currentY, line.lineHeight),
+			);
+		}
+		currentY += line.lineHeight;
+	});
 	ctx.restore();
+	return currentY - top;
 }
 
 function drawRoundedRect(
@@ -274,13 +307,38 @@ async function generatePoster() {
 			.filter(Boolean)
 			.join(" / ");
 
-		ctx.font = `700 ${24 * scale}px 'Roboto', sans-serif`;
+		const titleFont = `700 ${24 * scale}px 'Roboto', sans-serif`;
+		const metaFont = `700 ${15 * scale}px 'Roboto', sans-serif`;
+		const footerLabelFont = `600 ${12 * scale}px 'Roboto', sans-serif`;
+		const authorFont = `700 ${16 * scale}px 'Roboto', sans-serif`;
+		const footerSiteFont = `700 ${16 * scale}px 'Roboto', sans-serif`;
+
+		ctx.font = titleFont;
 		const titleLines = getLines(ctx, title, titleWidth, 3);
 		const titleLineHeight = 31 * scale;
-		const titleHeight = titleLines.length * titleLineHeight;
+		const titleStackLines = titleLines.map((line) => ({
+			text: line,
+			font: titleFont,
+			color: "#111827",
+			maxWidth: titleWidth,
+			lineHeight: titleLineHeight,
+		}));
+		const titleHeight = measureTextStack(titleStackLines);
 
 		const metaGap = metaText ? 14 * scale : 8 * scale;
-		const metaHeight = metaText ? 20 * scale : 0;
+		const metaLineHeight = 22 * scale;
+		const metaStackLines = metaText
+			? [
+					{
+						text: metaText,
+						font: metaFont,
+						color: "#374151",
+						maxWidth: titleWidth,
+						lineHeight: metaLineHeight,
+					},
+				]
+			: [];
+		const metaHeight = measureTextStack(metaStackLines);
 
 		const contentStartY = coverY + coverHeight + 24 * scale;
 		const afterTitleY = contentStartY + titleHeight;
@@ -375,32 +433,17 @@ async function generatePoster() {
 
 		let drawY = contentStartY;
 
-		ctx.textBaseline = "top";
-		ctx.textAlign = "left";
 		ctx.save();
 		ctx.fillStyle = themeColor;
-		fillRoundedRect(
-			ctx,
-			padding,
-			drawY + 4 * scale,
-			4 * scale,
-			Math.max(20 * scale, Math.min(titleHeight - 8 * scale, 58 * scale)),
-			2 * scale,
-		);
+		fillRoundedRect(ctx, padding, drawY, 4 * scale, titleHeight, 2 * scale);
 		ctx.restore();
 
-		ctx.font = `700 ${24 * scale}px 'Roboto', sans-serif`;
-		ctx.fillStyle = "#111827";
-		titleLines.forEach((line) => {
-			ctx.fillText(line, titleX, drawY);
-			drawY += titleLineHeight;
-		});
+		drawTextStack(ctx, titleStackLines, titleX, drawY);
+		drawY += titleHeight;
 
 		if (metaText) {
 			drawY += metaGap;
-			ctx.font = `500 ${13 * scale}px 'Roboto', sans-serif`;
-			ctx.fillStyle = "#667085";
-			drawTextLine(ctx, metaText, titleX, drawY, titleWidth);
+			drawTextStack(ctx, metaStackLines, titleX, drawY);
 		}
 
 		ctx.beginPath();
@@ -413,11 +456,9 @@ async function generatePoster() {
 		const qrSize = 62 * scale;
 		const qrX = width - padding - qrSize;
 		const qrY = footerY + (footerHeight - qrSize) / 2;
-		const avatarSize = 52 * scale;
+		const avatarSize = 62 * scale;
 		const avatarX = padding;
 		const avatarY = footerY + (footerHeight - avatarSize) / 2;
-		const textGroupHeight = 40 * scale;
-		const textGroupY = footerY + (footerHeight - textGroupHeight) / 2;
 
 		if (avatarImg) {
 			ctx.save();
@@ -449,49 +490,54 @@ async function generatePoster() {
 			ctx.stroke();
 		}
 
-		const authorTextX = padding + (avatarImg ? 52 * scale + 14 * scale : 0);
+		const authorTextX = padding + (avatarImg ? avatarSize + 14 * scale : 0);
 		const footerSiteTitle = normalizeText(siteTitle);
 		const siteInfoRightX = qrX - 14 * scale;
 		const siteTextWidth = 106 * scale;
 		const siteInfoLeftX = siteInfoRightX - siteTextWidth;
 		const footerTextWidth = siteInfoLeftX - 18 * scale - authorTextX;
-		const labelY = textGroupY;
-		const authorY = textGroupY + 22 * scale;
+		const footerLabelLineHeight = 18 * scale;
+		const footerValueLineHeight = 24 * scale;
+		const authorStackLines = [
+			{
+				text: i18n(I18nKey.author),
+				font: footerLabelFont,
+				color: "#9ca3af",
+				maxWidth: footerTextWidth,
+				lineHeight: footerLabelLineHeight,
+			},
+			{
+				text: author,
+				font: authorFont,
+				color: "#1f2937",
+				maxWidth: footerTextWidth,
+				lineHeight: footerValueLineHeight,
+			},
+		];
+		const siteStackLines = [
+			{
+				text: i18n(I18nKey.scanToRead),
+				font: footerLabelFont,
+				color: "#9ca3af",
+				maxWidth: siteTextWidth,
+				lineHeight: footerLabelLineHeight,
+			},
+			{
+				text: footerSiteTitle || siteTitle,
+				font: footerSiteFont,
+				color: "#1f2937",
+				maxWidth: siteTextWidth,
+				lineHeight: footerValueLineHeight,
+			},
+		];
+		const authorStackHeight = measureTextStack(authorStackLines);
+		const siteStackHeight = measureTextStack(siteStackLines);
+		const footerCenterY = qrY + qrSize / 2;
+		const authorStackY = footerCenterY - authorStackHeight / 2;
+		const siteStackY = footerCenterY - siteStackHeight / 2;
 
-		ctx.textAlign = "left";
-		ctx.fillStyle = "#9ca3af";
-		ctx.font = `${12 * scale}px 'Roboto', sans-serif`;
-		drawTextLine(
-			ctx,
-			i18n(I18nKey.author),
-			authorTextX,
-			labelY,
-			footerTextWidth,
-		);
-
-		ctx.fillStyle = "#1f2937";
-		ctx.font = `700 ${18 * scale}px 'Roboto', sans-serif`;
-		drawTextLine(ctx, author, authorTextX, authorY, footerTextWidth);
-
-		ctx.fillStyle = "#9ca3af";
-		ctx.font = `${12 * scale}px 'Roboto', sans-serif`;
-		drawRightTextLine(
-			ctx,
-			i18n(I18nKey.scanToRead),
-			siteInfoRightX,
-			textGroupY,
-			siteTextWidth,
-		);
-
-		ctx.fillStyle = "#1f2937";
-		ctx.font = `700 ${16 * scale}px 'Roboto', sans-serif`;
-		drawRightTextLine(
-			ctx,
-			footerSiteTitle || siteTitle,
-			siteInfoRightX,
-			textGroupY + 22 * scale,
-			siteTextWidth,
-		);
+		drawTextStack(ctx, authorStackLines, authorTextX, authorStackY);
+		drawTextStack(ctx, siteStackLines, siteInfoRightX, siteStackY, "right");
 
 		ctx.fillStyle = "#ffffff";
 		ctx.shadowColor = "rgba(15, 23, 42, 0.08)";
