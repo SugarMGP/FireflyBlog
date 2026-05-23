@@ -718,7 +718,7 @@ function adjustMainContentPosition(
 					mainContent.style.setProperty("top", bannerTargetTop, "important");
 				}
 			} else {
-				mainContent.style.setProperty("top", bannerTargetTop);
+				mainContent.style.setProperty("top", bannerTargetTop, "important");
 			}
 			const bannerGrid = document.getElementById("main-grid");
 			if (bannerGrid) {
