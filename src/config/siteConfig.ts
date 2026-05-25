@@ -173,12 +173,14 @@ export const siteConfig: SiteConfig = {
 			websiteId: "083fe852-42ba-4bf6-9ed1-c49b2b37f4e1",
 			// Umami JS地址，支持使用自建
 			scriptUrl: "https://umami.sugarmgp.cn/script.js",
+			// Umami 会话回放脚本地址，支持使用自建
+			replaysScriptUrl: "https://umami.sugarmgp.cn/recorder.js",
 			// 是否追踪出站链接
 			trackOutboundLinks: true,
 			// 是否收集浏览器性能指标
 			collectWebVitals: true,
 			// 会话回放配置
-			relpays: {
+			replays: {
 				// 是否启用会话回放
 				enabled: false,
 				// 录制会话采样率，范围 0-1，例如 0.15 表示记录 15% 的会话
