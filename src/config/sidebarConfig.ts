@@ -132,7 +132,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			// 响应式配置
 			responsive: {
 				// 是否显示年度文章热力图
-				showHeatmap: true,
+				showHeatmap: false,
 			},
 		},
 		{
