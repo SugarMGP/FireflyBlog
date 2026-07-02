@@ -100,7 +100,7 @@ export const siteConfig: SiteConfig = {
 		// 相册页面开关
 		gallery: false,
 		// 追番页面开关
-		anime: false,
+		anime: true,
 	},
 
 	// 分类导航栏开关，在首页和归档页顶部显示分类快捷导航
@@ -166,6 +166,22 @@ export const siteConfig: SiteConfig = {
 		// 可选值: "anime" | "book" | "music" | "game" | "real" (暂不支持"real"类型)
 		// 未列出的类型将按默认顺序排在后面
 		categoryOrder: ["anime", "book", "music", "game"],
+	},
+
+	// 追番配置（Bilibili + TMDB）
+	anime: {
+		// Bilibili 配置
+		bilibili: {
+			// 你的 Bilibili 用户 UID
+			uid: "129922746",
+		},
+		// TMDB 配置（可选）
+		// tmdb: {
+		// 	// TMDB API 密钥
+		// 	apiKey: "",
+		// 	// TMDB 列表 ID
+		// 	listId: "",
+		// },
 	},
 
 	// 分页配置
