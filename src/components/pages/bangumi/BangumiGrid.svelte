@@ -33,9 +33,21 @@ const {
 const isDynamic = $derived(!!fetchConfig);
 
 // 状态
-let activeTab = $state(initialActiveTab || "");
-let loading = $state(isDynamic);
+let activeTab = $state("");
+let fetchLoading = $state(false);
+const loading = $derived(isDynamic && fetchLoading);
 let error = $state(false);
+
+// 初始化 activeTab / 当 fetchConfig 变化时重置状态
+$effect(() => {
+	if (initialActiveTab) {
+		activeTab = initialActiveTab;
+	}
+	if (fetchConfig) {
+		fetchLoading = true;
+		error = false;
+	}
+});
 let errorTitle = $state("");
 let errorDesc = $state("");
 let updateTimestamp = $state("");
@@ -128,7 +140,7 @@ async function loadDynamicData() {
 			newTabs.push({ id: catKey, name: info.name, count: data.length });
 		} catch (e) {
 			console.error(`[Bangumi] 获取 ${catKey} 数据失败:`, e);
-			loading = false;
+			fetchLoading = false;
 			error = true;
 			errorTitle = i18n(I18nKey.bangumiFetchError);
 			errorDesc = i18n(I18nKey.bangumiFetchErrorDesc);
@@ -137,7 +149,7 @@ async function loadDynamicData() {
 	}
 
 	if (newTabs.length === 0 || newTabs.every((t) => t.count === 0)) {
-		loading = false;
+		fetchLoading = false;
 		error = true;
 		errorTitle = i18n(I18nKey.bangumiNoData);
 		errorDesc = i18n(I18nKey.bangumiNoDataDescription);
@@ -147,7 +159,7 @@ async function loadDynamicData() {
 	dynamicTabs = newTabs;
 	dynamicData = newData;
 	activeTab = newTabs[0].id;
-	loading = false;
+	fetchLoading = false;
 
 	const now = new Date();
 	const pad = (n: number) => (n < 10 ? `0${n}` : String(n));
@@ -193,7 +205,7 @@ onMount(async () => {
     {/each}
   </div>
   <!-- 卡片网格骨架 -->
-  <div class="bangumi-masonry" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+  <div class="bangumi-masonry grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
     {#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as _}
       <div class="rounded-xl overflow-hidden">
         <div class="aspect-2/3 bg-(--btn-regular-bg) animate-pulse"></div>
@@ -222,7 +234,7 @@ onMount(async () => {
       sectionId={tab.id}
       items={bangumiData[tab.id] || []}
       isActive={tab.id === activeTab}
-      itemsPerPage={12}
+      itemsPerPage={24}
       {subjectBaseUrl}
     />
   {/each}

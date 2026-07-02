@@ -21,7 +21,7 @@ interface FontOptions {
 export const prerender = true;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-	if (!siteConfig.generateOgImages) {
+	if (!siteConfig.post.generateOgImages) {
 		return [];
 	}
 
@@ -32,7 +32,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 		// 将 id 转换为 slug（移除扩展名）以匹配路由参数
 		const slug = removeFileExtension(post.id);
 		return {
-			params: { slug },
+			params: { slug: `${slug}.png` },
 			props: { post },
 		};
 	});
