@@ -37,7 +37,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "Mai's blog",
 		siteurl: "https://blog.imjh.top/",
 		tags: ["中登"],
-		weight: 18000,
+		weight: 10000,
 		enabled: true,
 	},
 	{
@@ -46,7 +46,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "MangoGovo's Blog",
 		siteurl: "https://www.mggovo.cn/",
 		tags: ["中登"],
-		weight: 17000,
+		weight: 10000,
 		enabled: true,
 	},
 	{
@@ -55,7 +55,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "星起之地",
 		siteurl: "https://hstardawn.github.io/",
 		tags: ["中登"],
-		weight: 16000,
+		weight: 10000,
 		enabled: true,
 	},
 	{
@@ -64,7 +64,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "敏涵の记事本",
 		siteurl: "https://blog.minhan.host/",
 		tags: ["中登"],
-		weight: 15000,
+		weight: 10000,
 		enabled: true,
 	},
 	{
@@ -73,7 +73,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "折乙 - Blog",
 		siteurl: "https://zheyi.in/",
 		tags: ["中登"],
-		weight: 14000,
+		weight: 10000,
 		enabled: true,
 	},
 	{
@@ -82,7 +82,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "素心阁",
 		siteurl: "https://dumbdaidai.github.io/",
 		tags: ["中登"],
-		weight: 13000,
+		weight: 10000,
 		enabled: true,
 	},
 	{
@@ -91,7 +91,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "司徒和丞相的博客",
 		siteurl: "https://situchengxiang.pages.dev/",
 		tags: ["中登"],
-		weight: 12000,
+		weight: 10000,
 		enabled: true,
 	},
 	{
@@ -100,7 +100,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "望舒的尘歌壶",
 		siteurl: "https://blog.phlin.cn/",
 		tags: ["老登"],
-		weight: 1100,
+		weight: 1000,
 		enabled: true,
 	},
 	{
@@ -118,7 +118,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "惜寞的无人小间",
 		siteurl: "https://www.lonesome.cn/",
 		tags: ["老登"],
-		weight: 900,
+		weight: 1000,
 		enabled: true,
 	},
 	{
@@ -127,7 +127,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "竹林里有冰的博客",
 		siteurl: "https://zhul.in/",
 		tags: ["老登"],
-		weight: 800,
+		weight: 1000,
 		enabled: true,
 	},
 	{
@@ -136,7 +136,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "Fridayssheep的鲸湾",
 		siteurl: "https://blog.fridayssheep.top/",
 		tags: ["小登"],
-		weight: 70,
+		weight: 100,
 		enabled: true,
 	},
 	{
@@ -145,7 +145,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "EArias's 垃圾桶",
 		siteurl: "https://eliadoarias.top/",
 		tags: ["小登"],
-		weight: 60,
+		weight: 100,
 		enabled: true,
 	},
 	{
@@ -154,7 +154,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "资源管理器的博客",
 		siteurl: "https://www.zyglq.cn/",
 		tags: ["大佬"],
-		weight: 5,
+		weight: 10,
 		enabled: true,
 	},
 	{
@@ -163,7 +163,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "日落果的Blog",
 		siteurl: "https://blog.archlinux.tech/",
 		tags: ["大佬"],
-		weight: 4,
+		weight: 10,
 		enabled: true,
 	},
 	{
@@ -172,7 +172,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "xtex's Blog",
 		siteurl: "https://blog.xtexx.eu.org/",
 		tags: ["大佬"],
-		weight: 3,
+		weight: 10,
 		enabled: true,
 	},
 	{
@@ -181,7 +181,7 @@ export const friendsConfig: FriendLink[] = [
 		desc: "Kitra 的遐想空间",
 		siteurl: "https://blog.kitramgp.cn/",
 		tags: ["大佬"],
-		weight: 2,
+		weight: 10,
 		enabled: true,
 	},
 	{
@@ -190,7 +190,16 @@ export const friendsConfig: FriendLink[] = [
 		desc: "suny 的博客",
 		siteurl: "https://www.sunynov.top/",
 		tags: ["大佬"],
-		weight: 1,
+		weight: 10,
+		enabled: true,
+	},
+	{
+		title: "LyCecilion",
+		imgurl: "https://crystal.stellalyr.ink/assets/perlica_avatar.png",
+		desc: "CrystaRin 镜雨亭",
+		siteurl: "https://crystal.stellalyr.ink/",
+		tags: ["大佬"],
+		weight: 10,
 		enabled: true,
 	},
 ];
