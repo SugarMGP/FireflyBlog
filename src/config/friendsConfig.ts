@@ -141,7 +141,7 @@ export const friendsConfig: FriendLink[] = [
 	},
 	{
 		title: "EliadOArias",
-		imgurl: "https://eliadoarias.top/img/logo/logo.png",
+		imgurl: "https://eliadoarias.top/img/logo.png",
 		desc: "EArias's 垃圾桶",
 		siteurl: "https://eliadoarias.top/",
 		tags: ["小登"],
