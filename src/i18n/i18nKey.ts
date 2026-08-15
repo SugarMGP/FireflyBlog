@@ -21,6 +21,27 @@ enum I18nKey {
 	tocEmpty = "tocEmpty",
 	music = "music",
 
+	// 动态
+	dynamic = "dynamic",
+	latestDynamics = "latestDynamics",
+	moreDynamics = "moreDynamics",
+	dynamicDescription = "dynamicDescription",
+	dynamicEmpty = "dynamicEmpty",
+	dynamicSearch = "dynamicSearch",
+	dynamicNoResults = "dynamicNoResults",
+	dynamicLoading = "dynamicLoading",
+	dynamicAllYears = "dynamicAllYears",
+	dynamicLoadMore = "dynamicLoadMore",
+	dynamicBackToList = "dynamicBackToList",
+	dynamicProfile = "dynamicProfile",
+	dynamicPermalink = "dynamicPermalink",
+	dynamicCollapseGallery = "dynamicCollapseGallery",
+	dynamicViewOriginal = "dynamicViewOriginal",
+	dynamicPreviousImage = "dynamicPreviousImage",
+	dynamicNextImage = "dynamicNextImage",
+	dynamicViewImage = "dynamicViewImage",
+	dynamicSelectImage = "dynamicSelectImage",
+
 	// 公告栏
 	announcement = "announcement",
 	announcementClose = "announcementClose",
@@ -87,6 +108,12 @@ enum I18nKey {
 	guestbookDescription = "guestbookDescription",
 	bangumi = "bangumi",
 
+	// 书签导航
+	booknav = "booknav",
+	booknavDescription = "booknavDescription",
+	searchBooknav = "searchBooknav",
+	booknavEmpty = "booknavEmpty",
+
 	// 番组计划筛选和状态文本
 	bangumiTitle = "bangumiTitle",
 	bangumiSubtitle = "bangumiSubtitle",
@@ -149,6 +176,35 @@ enum I18nKey {
 	bangumiUpdatedAt = "bangumiUpdatedAt",
 	bangumiDataStatic = "bangumiDataStatic",
 
+	// VNDB
+	vndb = "vndb",
+	vndbSubtitle = "vndbSubtitle",
+	vndbFilterAll = "vndbFilterAll",
+	vndbFilterVoted = "vndbFilterVoted",
+	vndbFilterUnvoted = "vndbFilterUnvoted",
+	vndbFilterNotes = "vndbFilterNotes",
+	vndbStatusWishlist = "vndbStatusWishlist",
+	vndbStatusPlaying = "vndbStatusPlaying",
+	vndbStatusFinished = "vndbStatusFinished",
+	vndbStatusStalled = "vndbStatusStalled",
+	vndbStatusDropped = "vndbStatusDropped",
+	vndbStatusUnknown = "vndbStatusUnknown",
+	vndbNoData = "vndbNoData",
+	vndbNoDataDescription = "vndbNoDataDescription",
+	vndbEmpty = "vndbEmpty",
+	vndbEmptyReason = "vndbEmptyReason",
+	vndbFetchError = "vndbFetchError",
+	vndbFetchErrorDesc = "vndbFetchErrorDesc",
+	vndbNotConfigured = "vndbNotConfigured",
+	vndbNotConfiguredDesc = "vndbNotConfiguredDesc",
+	vndbLastUpdated = "vndbLastUpdated",
+	vndbVotes = "vndbVotes",
+	vndbLengthVeryShort = "vndbLengthVeryShort",
+	vndbLengthShort = "vndbLengthShort",
+	vndbLengthMedium = "vndbLengthMedium",
+	vndbLengthLong = "vndbLengthLong",
+	vndbLengthVeryLong = "vndbLengthVeryLong",
+
 	// 追番
 	anime = "anime",
 	animeSubtitle = "animeSubtitle",
@@ -196,6 +252,7 @@ enum I18nKey {
 	paginationOf = "paginationOf",
 	paginationTotal = "paginationTotal",
 	paginationRecords = "paginationRecords",
+	paginationJump = "paginationJump",
 
 	// 404页面
 	notFound = "notFound",
@@ -271,6 +328,16 @@ enum I18nKey {
 	overlayBlur = "overlayBlur",
 	overlayCardOpacity = "overlayCardOpacity",
 
+	// 设置面板标签
+	settingsTabAppearance = "settingsTabAppearance",
+	settingsTabWallpaper = "settingsTabWallpaper",
+	settingsTabEffects = "settingsTabEffects",
+
+	// 卡片样式
+	cardSettings = "cardSettings",
+	cardBorder = "cardBorder",
+	cardFollowTheme = "cardFollowTheme",
+
 	// 文章布局
 	postListLayout = "postListLayout",
 	postListLayoutList = "postListLayoutList",
@@ -298,6 +365,7 @@ enum I18nKey {
 	// 站点统计
 	siteStats = "siteStats",
 	siteStatsPostCount = "siteStatsPostCount",
+	siteStatsDynamicCount = "siteStatsDynamicCount",
 	siteStatsCategoryCount = "siteStatsCategoryCount",
 	siteStatsTagCount = "siteStatsTagCount",
 	siteStatsTotalWords = "siteStatsTotalWords",

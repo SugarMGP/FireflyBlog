@@ -24,6 +24,25 @@ export const zh_TW: Translation = {
 	[Key.tableOfContents]: "文章目錄",
 	[Key.tocEmpty]: "目前頁面沒有目錄",
 	[Key.music]: "音樂",
+	[Key.dynamic]: "動態",
+	[Key.latestDynamics]: "最新動態",
+	[Key.moreDynamics]: "更多動態",
+	[Key.dynamicDescription]: "隨手記下此刻的想法與日常。",
+	[Key.dynamicEmpty]: "還沒有發佈動態",
+	[Key.dynamicSearch]: "搜尋動態...",
+	[Key.dynamicNoResults]: "沒有找到符合的動態",
+	[Key.dynamicLoading]: "正在載入動態",
+	[Key.dynamicAllYears]: "全部年份",
+	[Key.dynamicLoadMore]: "載入更多",
+	[Key.dynamicBackToList]: "返回動態列表",
+	[Key.dynamicProfile]: "查看 {name} 的資料",
+	[Key.dynamicPermalink]: "此動態的固定連結",
+	[Key.dynamicCollapseGallery]: "收起",
+	[Key.dynamicViewOriginal]: "查看大圖",
+	[Key.dynamicPreviousImage]: "上一張圖片",
+	[Key.dynamicNextImage]: "下一張圖片",
+	[Key.dynamicViewImage]: "查看圖片 {index}",
+	[Key.dynamicSelectImage]: "切換到圖片 {index}",
 	[Key.musicNoPlaying]: "暫未播放",
 	[Key.musicLyrics]: "歌詞",
 	[Key.musicVolume]: "音量",
@@ -57,6 +76,10 @@ export const zh_TW: Translation = {
 	[Key.friendsDescription]: "這裡是我的朋友們，歡迎互相訪問交流",
 	[Key.searchFriends]: "搜尋友鏈...",
 	[Key.friendsEmpty]: "暫無友情連結",
+	[Key.booknav]: "書籤導航",
+	[Key.booknavDescription]: "收藏一些好用的網站，按分類整理",
+	[Key.searchBooknav]: "搜尋書籤...",
+	[Key.booknavEmpty]: "暫無書籤",
 	[Key.guestbook]: "留言",
 	[Key.guestbookDescription]: "歡迎在這裡留下你的足跡，分享你的想法和建議",
 	[Key.untitled]: "無標題",
@@ -151,6 +174,38 @@ export const zh_TW: Translation = {
 	[Key.bangumiUpdatedAt]: "構建時間",
 	[Key.bangumiDataStatic]: "靜態數據",
 
+	// VNDB
+	[Key.vndb]: "VNDB",
+	[Key.vndbSubtitle]: "我的 VNDB 視覺小說列表",
+	[Key.vndbFilterAll]: "全部",
+	[Key.vndbFilterVoted]: "已評分",
+	[Key.vndbFilterUnvoted]: "未評分",
+	[Key.vndbFilterNotes]: "有筆記",
+	[Key.vndbStatusWishlist]: "想玩",
+	[Key.vndbStatusPlaying]: "在玩",
+	[Key.vndbStatusFinished]: "已玩",
+	[Key.vndbStatusStalled]: "擱置",
+	[Key.vndbStatusDropped]: "拋棄",
+	[Key.vndbStatusUnknown]: "未知",
+	[Key.vndbNoData]: "暫無數據",
+	[Key.vndbNoDataDescription]: "該分類下還沒有任何條目",
+	[Key.vndbEmpty]: "暫無數據",
+	[Key.vndbEmptyReason]:
+		"可能的原因：用戶 ID 不存在、列表為私密、網絡連接問題或 API 限制",
+	[Key.vndbFetchError]: "VNDB 資料拉取失敗",
+	[Key.vndbFetchErrorDesc]:
+		"構建時從 VNDB API 獲取資料失敗，該頁面內容暫不可用。",
+	[Key.vndbNotConfigured]: "未配置 VNDB 用戶ID",
+	[Key.vndbNotConfiguredDesc]:
+		"請在 src/config/siteConfig.ts 中配置你的 VNDB 用戶ID",
+	[Key.vndbLastUpdated]: "數據更新於",
+	[Key.vndbVotes]: "票",
+	[Key.vndbLengthVeryShort]: "極短",
+	[Key.vndbLengthShort]: "短",
+	[Key.vndbLengthMedium]: "中等",
+	[Key.vndbLengthLong]: "長",
+	[Key.vndbLengthVeryLong]: "極長",
+
 	// 追番
 	[Key.anime]: "追番",
 	[Key.animeSubtitle]: "我的追番列表，數據來自 Bilibili 和 TMDB",
@@ -199,6 +254,7 @@ export const zh_TW: Translation = {
 	[Key.paginationOf]: "頁，共",
 	[Key.paginationTotal]: "頁，總計",
 	[Key.paginationRecords]: "條記錄",
+	[Key.paginationJump]: "跳轉到指定頁",
 
 	// 404頁面
 	[Key.notFound]: "404",
@@ -275,6 +331,16 @@ export const zh_TW: Translation = {
 	[Key.overlayBlur]: "背景模糊度",
 	[Key.overlayCardOpacity]: "卡片透明度",
 
+	// 設定面板標籤
+	[Key.settingsTabAppearance]: "外觀",
+	[Key.settingsTabWallpaper]: "壁紙",
+	[Key.settingsTabEffects]: "特效",
+
+	// 卡片樣式
+	[Key.cardSettings]: "卡片樣式",
+	[Key.cardBorder]: "卡片邊框和陰影",
+	[Key.cardFollowTheme]: "卡片跟隨主題色",
+
 	// 文章佈局
 	[Key.postListLayout]: "文章佈局",
 	[Key.postListLayoutList]: "清單",
@@ -304,6 +370,7 @@ export const zh_TW: Translation = {
 	// 站點統計
 	[Key.siteStats]: "站點統計",
 	[Key.siteStatsPostCount]: "文章",
+	[Key.siteStatsDynamicCount]: "動態",
 	[Key.siteStatsCategoryCount]: "分類",
 	[Key.siteStatsTagCount]: "標籤",
 	[Key.siteStatsTotalWords]: "總字數",

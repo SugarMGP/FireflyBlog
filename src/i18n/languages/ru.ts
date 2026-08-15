@@ -24,6 +24,25 @@ export const ru: Translation = {
 	[Key.tableOfContents]: "Содержание",
 	[Key.tocEmpty]: "На этой странице нет оглавления",
 	[Key.music]: "Музыка",
+	[Key.dynamic]: "Моменты",
+	[Key.latestDynamics]: "Последние публикации",
+	[Key.moreDynamics]: "Больше публикаций",
+	[Key.dynamicDescription]: "Короткие мысли и моменты повседневной жизни.",
+	[Key.dynamicEmpty]: "Пока нет публикаций",
+	[Key.dynamicSearch]: "Поиск публикаций...",
+	[Key.dynamicNoResults]: "Подходящие публикации не найдены",
+	[Key.dynamicLoading]: "Загрузка публикаций",
+	[Key.dynamicAllYears]: "Все годы",
+	[Key.dynamicLoadMore]: "Загрузить ещё",
+	[Key.dynamicBackToList]: "Назад к публикациям",
+	[Key.dynamicProfile]: "Открыть профиль {name}",
+	[Key.dynamicPermalink]: "Постоянная ссылка на публикацию",
+	[Key.dynamicCollapseGallery]: "Свернуть",
+	[Key.dynamicViewOriginal]: "Открыть оригинал",
+	[Key.dynamicPreviousImage]: "Предыдущее изображение",
+	[Key.dynamicNextImage]: "Следующее изображение",
+	[Key.dynamicViewImage]: "Открыть изображение {index}",
+	[Key.dynamicSelectImage]: "Выбрать изображение {index}",
 	[Key.musicNoPlaying]: "Ничего не воспроизводится",
 	[Key.musicLyrics]: "Текст песни",
 	[Key.musicVolume]: "Громкость",
@@ -58,6 +77,11 @@ export const ru: Translation = {
 		"Вот мои друзья, добро пожаловать посетить и общаться друг с другом",
 	[Key.searchFriends]: "Поиск друзей...",
 	[Key.friendsEmpty]: "Друзей пока нет.",
+	[Key.booknav]: "Каталог закладок",
+	[Key.booknavDescription]:
+		"Подборка полезных сайтов, сгруппированных по категориям.",
+	[Key.searchBooknav]: "Поиск закладок...",
+	[Key.booknavEmpty]: "Закладок пока нет.",
 	[Key.guestbook]: "Гостевая книга",
 	[Key.guestbookDescription]:
 		"Добро пожаловать, оставьте свой след здесь, поделитесь своими мыслями и предложениями",
@@ -153,6 +177,38 @@ export const ru: Translation = {
 	[Key.bangumiUpdatedAt]: "Время сборки",
 	[Key.bangumiDataStatic]: "Статические данные",
 
+	// VNDB
+	[Key.vndb]: "VNDB",
+	[Key.vndbSubtitle]: "Мой список визуальных новелл VNDB",
+	[Key.vndbFilterAll]: "Все",
+	[Key.vndbFilterVoted]: "Оценено",
+	[Key.vndbFilterUnvoted]: "Без оценки",
+	[Key.vndbFilterNotes]: "С заметками",
+	[Key.vndbStatusWishlist]: "Хочу сыграть",
+	[Key.vndbStatusPlaying]: "Играю",
+	[Key.vndbStatusFinished]: "Пройдено",
+	[Key.vndbStatusStalled]: "Отложено",
+	[Key.vndbStatusDropped]: "Брошено",
+	[Key.vndbStatusUnknown]: "Неизвестно",
+	[Key.vndbNoData]: "Нет данных",
+	[Key.vndbNoDataDescription]: "В этой категории нет элементов",
+	[Key.vndbEmpty]: "Нет данных",
+	[Key.vndbEmptyReason]:
+		"Возможные причины: ID пользователя не существует, список закрыт, проблемы с сетью или ограничение API",
+	[Key.vndbFetchError]: "Ошибка загрузки данных VNDB",
+	[Key.vndbFetchErrorDesc]:
+		"Не удалось загрузить данные из VNDB API при сборке. Эта страница временно недоступна.",
+	[Key.vndbNotConfigured]: "ID пользователя VNDB не настроен",
+	[Key.vndbNotConfiguredDesc]:
+		"Укажите ID пользователя VNDB в src/config/siteConfig.ts",
+	[Key.vndbLastUpdated]: "Данные обновлены",
+	[Key.vndbVotes]: "голосов",
+	[Key.vndbLengthVeryShort]: "Очень короткая",
+	[Key.vndbLengthShort]: "Короткая",
+	[Key.vndbLengthMedium]: "Средняя",
+	[Key.vndbLengthLong]: "Длинная",
+	[Key.vndbLengthVeryLong]: "Очень длинная",
+
 	// Отслеживание аниме
 	[Key.anime]: "Аниме",
 	[Key.animeSubtitle]:
@@ -202,6 +258,7 @@ export const ru: Translation = {
 	[Key.paginationOf]: "из",
 	[Key.paginationTotal]: ", всего",
 	[Key.paginationRecords]: " записей",
+	[Key.paginationJump]: "Перейти к странице",
 
 	// 404 Страница
 	[Key.notFound]: "404",
@@ -283,6 +340,16 @@ export const ru: Translation = {
 	[Key.overlayBlur]: "Размытие фона",
 	[Key.overlayCardOpacity]: "Прозрачность карточек",
 
+	// Вкладки панели настроек
+	[Key.settingsTabAppearance]: "Оформление",
+	[Key.settingsTabWallpaper]: "Обои",
+	[Key.settingsTabEffects]: "Эффекты",
+
+	// Стиль карточек
+	[Key.cardSettings]: "Стиль карточек",
+	[Key.cardBorder]: "Рамка и тень карточек",
+	[Key.cardFollowTheme]: "Карточки跟随主题色",
+
 	// Макет списка сообщений
 	[Key.postListLayout]: "Макет списка сообщений",
 	[Key.postListLayoutList]: "Список",
@@ -313,6 +380,7 @@ export const ru: Translation = {
 	// Статистика сайта
 	[Key.siteStats]: "Статистика сайта",
 	[Key.siteStatsPostCount]: "Статьи",
+	[Key.siteStatsDynamicCount]: "Публикации",
 	[Key.siteStatsCategoryCount]: "Категории",
 	[Key.siteStatsTagCount]: "Теги",
 	[Key.siteStatsTotalWords]: "Всего слов",

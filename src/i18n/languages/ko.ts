@@ -24,6 +24,25 @@ export const ko: Translation = {
 	[Key.tableOfContents]: "목차",
 	[Key.tocEmpty]: "이 페이지에는 목차가 없습니다",
 	[Key.music]: "음악",
+	[Key.dynamic]: "일상",
+	[Key.latestDynamics]: "최신 일상",
+	[Key.moreDynamics]: "더 많은 일상",
+	[Key.dynamicDescription]: "짧은 생각과 일상을 기록합니다.",
+	[Key.dynamicEmpty]: "아직 게시된 일상이 없습니다",
+	[Key.dynamicSearch]: "일상 검색...",
+	[Key.dynamicNoResults]: "일치하는 일상이 없습니다",
+	[Key.dynamicLoading]: "일상을 불러오는 중",
+	[Key.dynamicAllYears]: "모든 연도",
+	[Key.dynamicLoadMore]: "더 보기",
+	[Key.dynamicBackToList]: "일상 목록으로",
+	[Key.dynamicProfile]: "{name}님의 프로필 보기",
+	[Key.dynamicPermalink]: "이 일상의 고유 링크",
+	[Key.dynamicCollapseGallery]: "접기",
+	[Key.dynamicViewOriginal]: "크게 보기",
+	[Key.dynamicPreviousImage]: "이전 이미지",
+	[Key.dynamicNextImage]: "다음 이미지",
+	[Key.dynamicViewImage]: "이미지 {index} 보기",
+	[Key.dynamicSelectImage]: "이미지 {index} 선택",
 	[Key.musicNoPlaying]: "재생 중인 곡 없음",
 	[Key.musicLyrics]: "가사",
 	[Key.musicVolume]: "볼륨",
@@ -58,6 +77,10 @@ export const ko: Translation = {
 		"여기는 제 친구들입니다. 방문하여 서로 교류해 보세요",
 	[Key.searchFriends]: "친구 검색...",
 	[Key.friendsEmpty]: "아직 친구가 없습니다.",
+	[Key.booknav]: "북마크 모음",
+	[Key.booknavDescription]: "유용한 사이트를 카테고리별로 모았습니다.",
+	[Key.searchBooknav]: "북마크 검색...",
+	[Key.booknavEmpty]: "북마크가 없습니다.",
 	[Key.guestbook]: "방명록",
 	[Key.guestbookDescription]:
 		"이곳에 흔적을 남기고 생각과 제안을 공유해 주세요",
@@ -153,6 +176,38 @@ export const ko: Translation = {
 	[Key.bangumiUpdatedAt]: "빌드 시각",
 	[Key.bangumiDataStatic]: "정적 데이터",
 
+	// VNDB
+	[Key.vndb]: "VNDB",
+	[Key.vndbSubtitle]: "내 VNDB 비주얼 노벨 목록",
+	[Key.vndbFilterAll]: "전체",
+	[Key.vndbFilterVoted]: "평가함",
+	[Key.vndbFilterUnvoted]: "미평가",
+	[Key.vndbFilterNotes]: "메모 있음",
+	[Key.vndbStatusWishlist]: "플레이하고 싶음",
+	[Key.vndbStatusPlaying]: "플레이 중",
+	[Key.vndbStatusFinished]: "플레이 완료",
+	[Key.vndbStatusStalled]: "보류",
+	[Key.vndbStatusDropped]: "중단",
+	[Key.vndbStatusUnknown]: "알 수 없음",
+	[Key.vndbNoData]: "데이터 없음",
+	[Key.vndbNoDataDescription]: "이 카테고리에는 항목이 없습니다",
+	[Key.vndbEmpty]: "데이터 없음",
+	[Key.vndbEmptyReason]:
+		"가능한 원인: 사용자 ID가 존재하지 않음, 목록이 비공개, 네트워크 연결 문제, 또는 API 호출 제한",
+	[Key.vndbFetchError]: "VNDB 데이터 가져오기 실패",
+	[Key.vndbFetchErrorDesc]:
+		"빌드 중 VNDB API에서 데이터를 가져오지 못했습니다. 이 페이지는 일시적으로 사용할 수 없습니다.",
+	[Key.vndbNotConfigured]: "VNDB 사용자 ID가 설정되지 않았습니다",
+	[Key.vndbNotConfiguredDesc]:
+		"src/config/siteConfig.ts에서 VNDB 사용자 ID를 설정하세요",
+	[Key.vndbLastUpdated]: "데이터 업데이트 시각",
+	[Key.vndbVotes]: "표",
+	[Key.vndbLengthVeryShort]: "매우 짧음",
+	[Key.vndbLengthShort]: "짧음",
+	[Key.vndbLengthMedium]: "중간",
+	[Key.vndbLengthLong]: "김",
+	[Key.vndbLengthVeryLong]: "매우 김",
+
 	// Anime Tracking
 	[Key.anime]: "애니메이션",
 	[Key.animeSubtitle]: "저의 애니메이션 시청 기록, Bilibili와 TMDB 데이터 기반",
@@ -201,6 +256,7 @@ export const ko: Translation = {
 	[Key.paginationOf]: "/",
 	[Key.paginationTotal]: ", 총",
 	[Key.paginationRecords]: "개",
+	[Key.paginationJump]: "지정한 페이지로 이동",
 
 	// 404 Page
 	[Key.notFound]: "404",
@@ -280,6 +336,16 @@ export const ko: Translation = {
 	[Key.overlayBlur]: "배경 흐림",
 	[Key.overlayCardOpacity]: "카드 불투명도",
 
+	// Settings Panel Tabs
+	[Key.settingsTabAppearance]: "외형",
+	[Key.settingsTabWallpaper]: "배경화면",
+	[Key.settingsTabEffects]: "효과",
+
+	// 카드 스타일
+	[Key.cardSettings]: "카드 스타일",
+	[Key.cardBorder]: "카드 테두리와 그림자",
+	[Key.cardFollowTheme]: "카드 테마 색상 따르기",
+
 	// Post List Layout
 	[Key.postListLayout]: "게시글 목록 레이아웃",
 	[Key.postListLayoutList]: "목록형",
@@ -309,6 +375,7 @@ export const ko: Translation = {
 	// Site Statistics
 	[Key.siteStats]: "사이트 통계",
 	[Key.siteStatsPostCount]: "게시글",
+	[Key.siteStatsDynamicCount]: "일상",
 	[Key.siteStatsCategoryCount]: "카테고리",
 	[Key.siteStatsTagCount]: "태그",
 	[Key.siteStatsTotalWords]: "총 단어 수",

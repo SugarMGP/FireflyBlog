@@ -24,6 +24,25 @@ export const ja: Translation = {
 	[Key.tableOfContents]: "目次",
 	[Key.tocEmpty]: "このページには目次がありません",
 	[Key.music]: "音楽",
+	[Key.dynamic]: "つぶやき",
+	[Key.latestDynamics]: "最新の投稿",
+	[Key.moreDynamics]: "もっと見る",
+	[Key.dynamicDescription]: "日々の短い思いや出来事を記録します。",
+	[Key.dynamicEmpty]: "まだ投稿がありません",
+	[Key.dynamicSearch]: "投稿を検索...",
+	[Key.dynamicNoResults]: "一致する投稿がありません",
+	[Key.dynamicLoading]: "投稿を読み込んでいます",
+	[Key.dynamicAllYears]: "すべての年",
+	[Key.dynamicLoadMore]: "さらに読み込む",
+	[Key.dynamicBackToList]: "投稿一覧へ戻る",
+	[Key.dynamicProfile]: "{name}のプロフィールを見る",
+	[Key.dynamicPermalink]: "この投稿への固定リンク",
+	[Key.dynamicCollapseGallery]: "閉じる",
+	[Key.dynamicViewOriginal]: "拡大表示",
+	[Key.dynamicPreviousImage]: "前の画像",
+	[Key.dynamicNextImage]: "次の画像",
+	[Key.dynamicViewImage]: "画像 {index} を表示",
+	[Key.dynamicSelectImage]: "画像 {index} に切り替え",
 	[Key.musicNoPlaying]: "再生中なし",
 	[Key.musicLyrics]: "歌詞",
 	[Key.musicVolume]: "音量",
@@ -58,6 +77,10 @@ export const ja: Translation = {
 		"ここは私の友達です、お互いに訪問して交流することを歓迎します",
 	[Key.searchFriends]: "友達を検索...",
 	[Key.friendsEmpty]: "まだ友達がいません",
+	[Key.booknav]: "ブックマーク集",
+	[Key.booknavDescription]: "便利なサイトをカテゴリ別に集めました",
+	[Key.searchBooknav]: "ブックマークを検索...",
+	[Key.booknavEmpty]: "ブックマークがありません",
 	[Key.guestbook]: "ゲストブック",
 	[Key.guestbookDescription]:
 		"ここに足跡を残して、あなたの考えや提案を共有してください",
@@ -153,6 +176,38 @@ export const ja: Translation = {
 	[Key.bangumiUpdatedAt]: "ビルド時間",
 	[Key.bangumiDataStatic]: "静的データ",
 
+	// VNDB
+	[Key.vndb]: "VNDB",
+	[Key.vndbSubtitle]: "私のビジュアルノベルリスト",
+	[Key.vndbFilterAll]: "すべて",
+	[Key.vndbFilterVoted]: "評価済み",
+	[Key.vndbFilterUnvoted]: "未評価",
+	[Key.vndbFilterNotes]: "ノートあり",
+	[Key.vndbStatusWishlist]: "プレイしたい",
+	[Key.vndbStatusPlaying]: "プレイ中",
+	[Key.vndbStatusFinished]: "プレイ済み",
+	[Key.vndbStatusStalled]: "保留",
+	[Key.vndbStatusDropped]: "中断",
+	[Key.vndbStatusUnknown]: "不明",
+	[Key.vndbNoData]: "データなし",
+	[Key.vndbNoDataDescription]: "このカテゴリに項目がありません",
+	[Key.vndbEmpty]: "データなし",
+	[Key.vndbEmptyReason]:
+		"考えられる理由：ユーザーIDが存在しない、リストが非公開、ネットワーク接続の問題、またはAPI制限",
+	[Key.vndbFetchError]: "VNDB データ取得失敗",
+	[Key.vndbFetchErrorDesc]:
+		"ビルド時に VNDB API からのデータ取得に失敗しました。このページは一時的に利用できません。",
+	[Key.vndbNotConfigured]: "VNDB ユーザーIDが未設定です",
+	[Key.vndbNotConfiguredDesc]:
+		"src/config/siteConfig.ts で VNDB ユーザーIDを設定してください",
+	[Key.vndbLastUpdated]: "データ更新",
+	[Key.vndbVotes]: "票",
+	[Key.vndbLengthVeryShort]: "非常に短い",
+	[Key.vndbLengthShort]: "短い",
+	[Key.vndbLengthMedium]: "中程度",
+	[Key.vndbLengthLong]: "長い",
+	[Key.vndbLengthVeryLong]: "非常に長い",
+
 	// 追番（アニメ追跡）
 	[Key.anime]: "追番",
 	[Key.animeSubtitle]: "私のアニメ追跡リスト、Bilibili と TMDB からデータ取得",
@@ -201,6 +256,7 @@ export const ja: Translation = {
 	[Key.paginationOf]: "ページ、全",
 	[Key.paginationTotal]: "ページ、合計",
 	[Key.paginationRecords]: "件",
+	[Key.paginationJump]: "指定ページへ移動",
 
 	// 404ページ
 	[Key.notFound]: "404",
@@ -280,6 +336,16 @@ export const ja: Translation = {
 	[Key.overlayBlur]: "背景ぼかし",
 	[Key.overlayCardOpacity]: "カード透明度",
 
+	// 設定パネルタブ
+	[Key.settingsTabAppearance]: "外観",
+	[Key.settingsTabWallpaper]: "壁紙",
+	[Key.settingsTabEffects]: "エフェクト",
+
+	// カードスタイル
+	[Key.cardSettings]: "カードスタイル",
+	[Key.cardBorder]: "カードのボーダーと影",
+	[Key.cardFollowTheme]: "カードのテーマカラー追随",
+
 	// 投稿リストレイアウト
 	[Key.postListLayout]: "投稿リストレイアウト",
 	[Key.postListLayoutList]: "リスト",
@@ -310,6 +376,7 @@ export const ja: Translation = {
 	// サイト統計
 	[Key.siteStats]: "サイト統計",
 	[Key.siteStatsPostCount]: "記事",
+	[Key.siteStatsDynamicCount]: "投稿",
 	[Key.siteStatsCategoryCount]: "カテゴリー",
 	[Key.siteStatsTagCount]: "タグ",
 	[Key.siteStatsTotalWords]: "総文字数",

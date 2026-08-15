@@ -24,8 +24,6 @@ export const siteConfig: SiteConfig = {
 	themeColor: {
 		// 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
 		hue: 250,
-		// 是否对访问者隐藏主题色选择器
-		fixed: true,
 		// 默认模式："light" 亮色，"dark" 暗色，"system" 跟随系统
 		defaultMode: "system",
 	},
@@ -38,12 +36,13 @@ export const siteConfig: SiteConfig = {
 	// 网站Card样式配置
 	card: {
 		// 是否开启卡片边框和阴影，开启后让网站更有立体感
-		border: true,
+		border: false,
 		// 是否让卡片风格跟随主题色相
 		followTheme: false,
 	},
 
 	// Favicon 配置
+	// 如果启用了OpenGraph图片功能，数组中需要包含png格式的favicon图标
 	favicon: [
 		{
 			// 图标文件路径
@@ -63,6 +62,9 @@ export const siteConfig: SiteConfig = {
 		// 2. 本地图片（public目录，不优化）: { type: "image", value: "/assets/images/logo.webp", alt: "Logo" }
 		// 3. 本地图片（src目录，自动优化但会增加构建时间）: { type: "image", value: "assets/images/logo.webp", alt: "Logo" }
 		// 4. 网络图片: { type: "url", value: "https://example.com/logo.png", alt: "Logo" }
+		// image 和 url 类型可额外设置 valueDark，用于暗色模式下显示另一张图片，不设置则亮暗色共用 value
+		// 例如: { type: "image", value: "assets/images/logo.png", valueDark: "assets/images/logo-dark.png", alt: "Logo" }
+		// 使用 Astro 图标库时不需要设置 valueDark，图标会自动跟随主题亮暗色切换
 		logo: {
 			type: "image",
 			value: "assets/images/sugarmgp-avatar.webp",
@@ -97,14 +99,30 @@ export const siteConfig: SiteConfig = {
 		guestbook: true,
 		// 番组计划页面开关，含追番、游戏、书籍和音乐
 		bangumi: false,
+		// VNDB页面开关。
+		vndb: false,
 		// 相册页面开关
 		gallery: false,
 		// 追番页面开关
 		anime: false,
+		// 动态页面开关
+		dynamic: false,
+		// 书签导航页面开关
+		booknav: false,
 	},
 
 	// 分类导航栏开关，在首页和归档页顶部显示分类快捷导航
 	categoryBar: false,
+
+	// 分类导航栏按钮样式
+	// "pill"：胶囊，主题色浅底圆角
+	// "rectangle"：矩形，配色同胶囊，仅圆角更小
+	categoryStyle: "rectangle",
+
+	// 标签样式，作用于文章列表底部标签、标签页和侧边栏标签
+	// "pill"：胶囊，中性灰底圆角
+	// "rectangle"：矩形，主题色底小圆角
+	tagStyle: "pill",
 
 	// 归档页是否折叠非最新年份文章，禁用后默认展开全部年份
 	foldArticle: true,
@@ -115,8 +133,9 @@ export const siteConfig: SiteConfig = {
 		defaultMode: "list",
 		// 移动端默认布局模式，不设置则跟随 defaultMode
 		mobileDefaultMode: "list",
-		// 是否允许用户切换布局
-		allowSwitch: false,
+		// 列表模式下封面图显示在哪一侧："right" 右侧，"left" 左侧
+		// 网格模式的封面固定在卡片顶部，不受此项影响
+		coverPosition: "right",
 		// 文章简介显示行数，设为 0 则不截断
 		descriptionLines: 2,
 		// 文章卡片底部统计和发布日期是否显示图标
@@ -125,6 +144,10 @@ export const siteConfig: SiteConfig = {
 		// 设置为"meta"：显示在文章标题下的元数据
 		// 设置为"bottom"：顶替stats在底部显示
 		tagsPosition: "bottom",
+		// 底部标签样式，仅在 tagsPosition 为 "bottom" 时生效
+		// "chip"：按钮样式，形状跟随上方的 tagStyle 配置
+		// "text"：无底色，只有文字
+		tagsBottomStyle: "chip",
 		// PostMeta 元数据显示控制
 		meta: {
 			// 是否显示发布日期
@@ -156,6 +179,10 @@ export const siteConfig: SiteConfig = {
 			masonry: false,
 			// 网格模式卡片最小宽度(px)，浏览器根据容器宽度自动计算列数
 			columnWidth: 320,
+			// 网格模式封面是否撑满卡片贴边
+			// true：封面顶到卡片左右和上边缘，只有上面两角是圆角
+			// false：封面按卡片内边距内缩，上、左、右留出间距，四角都是圆角
+			coverFullWidth: false,
 		},
 	},
 
@@ -195,6 +222,30 @@ export const siteConfig: SiteConfig = {
 		// 可选值: "anime" | "book" | "music" | "game" | "real" (暂不支持"real"类型)
 		// 未列出的类型将按默认顺序排在后面
 		categoryOrder: ["anime", "book", "music", "game"],
+		// 控制各分类的启用状态（true/false），未指定的分类默认启用
+		// categories: {
+		// 	game: false, // 禁用游戏分类显示
+		// },
+	},
+
+	// VNDB 配置
+	vndb: {
+		// VNDB 用户 ID
+		userId: "",
+		// 数据模式：static=构建时获取，dynamic=客户端实时获取
+		// static 模式在构建时获取数据并静态渲染，部署后数据不更新
+		// dynamic 模式在浏览器中实时请求 API，始终显示最新数据
+		mode: "static",
+		// 构建时下载并压缩封面到 public/vndb-covers，图片由本站服务器提供
+		downloadCovers: true,
+		// VNDB API 地址
+		apiUrl: "https://api.vndb.org/kana",
+		// 条目详情页地址，末尾需要带 /
+		vnBaseUrl: "https://vndb.org/",
+		// 私密列表访问令牌，仅 static 模式下使用；不要把真实令牌提交到公开仓库！
+		apiToken: "",
+		// 对Nsfw的游戏封面模糊化
+		blurNsfw: true,
 	},
 
 	// 追番配置（Bilibili + TMDB）
