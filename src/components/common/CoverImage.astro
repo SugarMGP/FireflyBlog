@@ -61,8 +61,8 @@ const lqipProps = isLocal
 		? getLqipProps(src, basePath, true)
 		: getLqipProps(src);
 
-// 列表卡片和文章详情共享同一组封面产物
-const widths = [828];
+const width = 828;
+const widths = [320, 480, 640, 828, 1200, 1600];
 const sizes = preview
 	? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px"
 	: "(max-width: 768px) 100vw, 828px";
@@ -113,7 +113,7 @@ const remoteReferrerPolicy =
 			formats={formats}
 			quality={quality}
 			layout={layout}
-			width={828}
+			width={width}
 			widths={widths}
 			sizes={sizes}
 			dataCoverImg={true}
