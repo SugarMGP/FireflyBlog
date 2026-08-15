@@ -87,7 +87,7 @@ export const friendsConfig: FriendLink[] = [
 	},
 	{
 		title: "SituChengxiang",
-		imgurl: "https://s41.ax1x.com/2026/02/13/pZqMzSx.png",
+		imgurl: "https://situchengxiang.pages.dev/images/avatar.png",
 		desc: "司徒和丞相的博客",
 		siteurl: "https://situchengxiang.pages.dev/",
 		tags: ["中登"],
