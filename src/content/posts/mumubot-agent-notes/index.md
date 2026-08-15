@@ -1,7 +1,7 @@
 ---
 title: "从 MumuBot 开始的 Agent 开发之旅"
 published: 2026-08-13T20:00:00+08:00
-draft: true
+draft: false
 category: "实践记录"
 image: ./cover.webp
 tags:
@@ -21,7 +21,7 @@ tags:
 
 在经过一段时间的开发和迭代后，沐沐终于趋于完善了，能够在群里和大家谈笑风生、插科打诨。作为本人的第一个 Agent 项目，自然要写篇博客好好记录下。
 
-![](image.png)
+![叫沐沐大人](image.png)
 
 ## 何为 Agent
 
@@ -134,10 +134,10 @@ func NewSpeakTool() (tool.InvokableTool, error) {
 
 | 用途 | 工具 | 能做什么 |
 | --- | --- | --- |
-| 发言与互动 | `speak`、`stayQuiet`、`poke`、`reactToMessage`、`recallMessage`、`searchStickers`、`sendSticker` | 发消息、沉默、戳一戳、贴表情、撤回消息和发送表情包 |
-| 补充群聊现场 | `getRecentMessages`、`getGroupMemberDetail`、`getGroupNotices`、`getEssenceMessages`、`getMessageReactions`、`getForwardMessageDetail` | 查看更早的聊天、成员资料、群公告、精华消息、表情回应和合并转发 |
-| 记忆与群内文化 | `saveMemory`、`queryMemory`、`searchJargon`、`searchExpressions`、`updateMood` | 保存和查询长期记忆，理解群内黑话、说话习惯并调整情绪状态 |
-| 外部信息 | `request_get` | 读取网页内容 |
+| 发言与互动 | speak、stayQuiet、poke、reactToMessage、recallMessage、searchStickers、sendSticker | 发消息、沉默、戳一戳、贴表情、撤回消息和发送表情包 |
+| 补充群聊现场 | getRecentMessages、getGroupMemberDetail、getGroupNotices、getEssenceMessages、getMessageReactions、getForwardMessageDetail | 查看更早的聊天、成员资料、群公告、精华消息、表情回应和合并转发 |
+| 记忆与群内文化 | saveMemory、queryMemory、searchJargon、searchExpressions、updateMood | 保存和查询长期记忆，理解群内黑话、说话习惯并调整情绪状态 |
+| 外部信息 | request_get | 读取网页内容 |
 
 除此之外，程序还可以通过 MCP 接入额外工具。MCP 是一套把外部工具统一提供给模型的协议，接入以后和上面这些内置工具没有太大区别，都会出现在 ReAct 可以选择的工具列表里。
 
