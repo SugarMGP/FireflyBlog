@@ -186,7 +186,7 @@ export const friendsConfig: FriendLink[] = [
 	},
 	{
 		title: "suny",
-		imgurl: "https://pic1.imgdb.cn/item/6891f04e58cb8da5c806dce6.jpg",
+		imgurl: "https://gitee.com/bobrocket/img/raw/master/Snipaste_2025-12-30_21-02-15.png",
 		desc: "suny 的博客",
 		siteurl: "https://www.sunynov.top/",
 		tags: ["大佬"],
