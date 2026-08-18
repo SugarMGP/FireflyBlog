@@ -149,6 +149,15 @@ export const friendsConfig: FriendLink[] = [
 		enabled: true,
 	},
 	{
+		title: "瞌睡",
+		imgurl: "https://www.ysss-ee.xyz/favicon.jpg",
+		desc: "Yuan's Blog",
+		siteurl: "https://www.ysss-ee.xyz/",
+		tags: ["小登"],
+		weight: 100,
+		enabled: true,
+	},
+	{
 		title: "资源管理器",
 		imgurl: "https://cos.zyglq.cn/static/web-logo.jpg",
 		desc: "资源管理器的博客",
@@ -186,7 +195,7 @@ export const friendsConfig: FriendLink[] = [
 	},
 	{
 		title: "suny",
-		imgurl: "https://gitee.com/bobrocket/img/raw/master/Snipaste_2025-12-30_21-02-15.png",
+		imgurl: "https://blog.kitramgp.cn/img/links/suny.jpg",
 		desc: "suny 的博客",
 		siteurl: "https://www.sunynov.top/",
 		tags: ["大佬"],
