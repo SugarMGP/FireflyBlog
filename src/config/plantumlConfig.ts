@@ -21,7 +21,7 @@ export const plantumlConfig: PlantUMLConfig = {
 	 * 默认使用官方公共服务器；敏感内容请部署自建服务器（例如
 	 * `plantuml/plantuml-server` Docker 镜像），并把此字段替换为自建地址。
 	 */
-	server: "https://www.plantuml.com/plantuml",
+	server: "https://kroki.io/plantuml/",
 
 	/**
 	 * 亮色模式下注入到 PlantUML 源码的主题名（对应 `!theme <name>`）。
